@@ -1,0 +1,318 @@
+CUSTOMER TABLE:
+
+CREATE TABLE Customer ( 
+
+ CustomerID INT NOT NULL, 
+
+ FirstName VARCHAR2(50), 
+
+ LastName VARCHAR2(50), 
+
+ MiddleName VARCHAR2(50), 
+
+ Street VARCHAR2(100), 
+
+ City VARCHAR2(50), 
+
+ State VARCHAR2(50), 
+
+ PostalCode VARCHAR2(10), 
+
+ Email VARCHAR2(100), 
+
+ PhoneNumber VARCHAR2(20), 
+
+CONSTRAINT CustomerPK PRIMARY KEY(CustomerID) 
+
+); 
+
+ 
+
+ALTER TABLE Customer  
+
+ADD CONSTRAINT Customer_email CHECK (Email LIKE '%_@__%.%'); 
+
+ALTER TABLE Customer  
+
+ADD CONSTRAINT Customer_details UNIQUE (CustomerID, LastName); 
+
+ 
+
+INSERT INTO Customer VALUES (1, 'Bhumika', 'Suvagia', 'M', '5022 S Power RD', 'Mesa', 'AZ', '85212', 'johndoe@email.com', '555-1234');	 
+
+INSERT INTO Customer VALUES (2, 'Ankita', 'Savaliya', NULL, '3935 Grand Ave', 'Chino Hills', 'CA', '91710', 'janesmith@email.com', '555-5678'); 
+
+INSERT INTO Customer VALUES (3, 'Akanksha', 'Khair', 'T', '2219 Park Ave', 'Tustin', 'CA', '92782', 'bob.johnson@email.com', '555-9876'); 
+
+INSERT INTO Customer VALUES (4, 'Sara', 'Lee', 'J', '200 Towne Center Blvd', 'Sanford', 'FL', '32771', 'sara.lee@email.com', '555-5555'); 
+
+INSERT INTO Customer VALUES (5, 'David', 'Nguyen', 'H', '1201 F St', 'Washington', 'DC', '20004', 'david.nguyen@email.com', '555-4321'); 
+
+ORDER TABLE:
+
+CREATE TABLE Orders 
+
+( 
+
+OrderNumber INT NOT NULL, 
+
+OrderAmount DECIMAL (10,2), 
+
+OrderDate DATE, 
+
+OrderStatus VARCHAR2(50), 
+
+CustomerID INT, 
+
+EmployeeID INT, 
+
+CONSTRAINT OrderNumberPK PRIMARY KEY(OrderNumber), 
+
+CONSTRAINT OrderNumberFK1 FOREIGN KEY (CustomerID) REFERENCES Customer (CustomerID), 
+
+CONSTRAINT OrderNumberFK2 FOREIGN KEY (EmployeeID) REFERENCES AKHAIRE3.employee(EmployeeID) 
+
+); 
+
+ 
+
+ALTER TABLE Orders 
+
+MODIFY OrderDate DEFAULT SYSDATE. 
+
+ 
+
+INSERT INTO Orders VALUES (1001, 500.00, TO_DATE ('03-22-2015', 'MM-DD-YYYY'), 'Pending', 1, 1); 
+
+INSERT INTO Orders VALUES (1002, 750.00, TO_DATE('04-01-2017','MM-DD-YYYY'), 'Completed', 2, 2); 
+
+INSERT INTO Orders VALUES (1003, 125.00, TO_DATE('05-22-2015','MM-DD-YYYY'), 'Cancelled', 3, 1); 
+
+INSERT INTO Orders VALUES (1004, 1000.00, TO_DATE('02-15-2020','MM-DD-YYYY'), 'Pending', 1, 3); 
+
+INSERT INTO Orders VALUES (1005, 250.00, TO_DATE('05-03-2019','MM-DD-YYYY'), 'Completed', 4, 2); 
+
+ORDERLINE TABLE: (Akanksha Khaire) 
+
+CREATE TABLE OrderLine ( 
+
+OrderNumber INT NOT NULL, 
+
+ProductID INT NOT NULL, 
+
+OrderedQuantity INT, 
+
+CONSTRAINT OrderLinePK PRIMARY KEY (OrderNumber, ProductID), 
+
+CONSTRAINT OrderLine_FK3 FOREIGN KEY (OrderNumber) REFERENCES bsuvagi.Orders (OrderNumber), 
+
+CONSTRAINT OrderLine_FK4 FOREIGN KEY(ProductID) REFERENCES asavali2.Beauty_Products(ProductID) 
+
+); 
+
+ 
+
+INSERT INTO OrderLine VALUES (1001, 1, 2); 
+
+INSERT INTO OrderLine VALUES (1001, 2, 1); 
+
+INSERT INTO OrderLine VALUES (1002, 3, 3); 
+
+INSERT INTO OrderLine VALUES (1002, 4, 2); 
+
+INSERT INTO OrderLine VALUES (1003, 5, 1); 
+
+ 
+
+BEAUTY PRODUCTS TABLE:
+
+ 
+
+DROP TABLE Beauty_Products; 
+
+CREATE TABLE Beauty_Products 
+
+( 
+
+    ProductID INT NOT NULL, 
+
+    ProductName VARCHAR2(50), 
+
+    Description VARCHAR2(50), 
+
+    Price DECIMAL(10,2), 
+
+    Quantity INT, 
+
+    CategoryName VARCHAR2(30), 
+
+    ProductReview VARCHAR2(100), 
+
+    Ingredients VARCHAR2(50), 
+
+    NetWeight VARCHAR2(10), 
+
+    PackagingType VARCHAR2(20), 
+
+    ProdAvailability VARCHAR2(15), 
+
+    Street VARCHAR2(50), 
+
+    City VARCHAR2(25), 
+
+    State CHAR(2), 
+
+    PostalCode VARCHAR2(5), 
+
+    ProductType VARCHAR2(5), 
+
+    CONSTRAINT ProductIDPK PRIMARY KEY(ProductID) 
+
+); 
+
+ 
+
+ALTER TABLE Beauty_Products  
+
+ADD CONSTRAINT ProdAvalibility_Check CHECK (ProdAvailability IN ('Available','Not Available')); 
+
+ALTER TABLE Beauty_Products 
+
+ADD CONSTRAINT ProductType_ManufacturedOrPurchased CHECK (ProductType IN('M','P')); 
+
+ 
+
+INSERT INTO Beauty_Products (ProductID, ProductName, Description, Price, Quantity, CategoryName, ProductReview, Ingredients, NetWeight, PackagingType, ProdAvailability, Street, City, State, PostalCode, ProductType)  
+
+VALUES (1, 'Lipstick', 'Long-lasting lipstick in a bold red shade', 9.99, 50, 'Makeup', 'Love this lipstick! Goes on smooth and lasts for hours', 'Castor oil', '12 oz', 'Tube', 'Available', '356 OLD STEESE HWY', 'FAIRBANKS', 'AK', '99701', 'M');           
+
+INSERT INTO Beauty_Products VALUES (2, 'Mascara', 'Lengthening mascara in black', 14.99, 30, 'Eye', 'This mascara is amazing! No clumping and makes my lashes look so long!', 'Vitamin E, jojoba oil', '28 oz', 'Bottle', 'Available', '2200 S ATLANTIC BL', 'LOS ANGELES', 'CA', '91754', 'P'); 
+
+INSERT INTO Beauty_Products VALUES (3, 'Facial Cleanser', 'Gentle cleanser for all skin types', 8.99, 75, 'Skincare', 'I love how this cleanser leaves my skin feeling soft and clean!', 'Water, glycerin, aloe vera', '4.2 oz', 'Bottle', 'Available', '2980 E CAPITOL EXPY STE 60', 'SAN JOSE', 'CA', '95148', 'M'); 
+
+INSERT INTO Beauty_products VALUES (4, 'Hair Spray', 'Flexible hold hairspray for all hair types', 6.99, 40, 'Haircare', 'This hairspray keeps my style in place without feeling crunchy or stiff!', 'Alcohol, water, panthenol', '8 oz', 'Can', 'Available', '11954 CARMEL MOUNTAIN ROAD', 'SAN DIEGO', 'CA', '92128', 'P'); 
+
+INSERT INTO Beauty_Products VALUES(5, 'Sunscreen', 'Broad spectrum SPF 50 sunscreen lotion', 15.99, 40, 'Skincare', 'This is my new go-to sunscreen! No white cast and doesn''t feel heavy on my skin', 'Zinc oxide, octinoxate', '3.4 oz', 'Tube', 'Available', '13424 BISCAYNE BLVD', 'MIAMI', 'FL', '33181', 'M'); 
+
+ 
+
+MANUFACTURED TABLE:
+ 
+
+CREATE TABLE Manufactured 
+
+(MProductID INT NOT NULL, 
+
+ManufacName VARCHAR2(50), 
+
+ManufacDate DATE, 
+
+ExpiryDate DATE, 
+
+SafetyWarning VARCHAR2(80), 
+
+CONSTRAINT Manufactured_PK PRIMARY KEY(MProductID), 
+
+CONSTRAINT Manufactured_FK4 FOREIGN KEY(MProductID) REFERENCES Beauty_Products (ProductID)); 
+
+ 
+
+INSERT INTO Manufactured VALUES 
+
+(1,'AB Beauty Products’, TO_DATE('01-10-2022','MM-DD-YYYY'), TO_DATE('07-22-2024','MM-DD-YYYY'),'For external use only. Avoid contact with eyes. Keep out of reach of children') 
+
+INSERT INTO Manufactured 
+
+VALUES (3,'AB Beauty Products',TO_DATE('01-10-2022','MM-DD-YYYY'),TO_DATE('07-22-2024','MM-DD-YYYY'),'For external use only. Avoid contact with eyes. Keep out of reach of children') 
+
+INSERT INTO Manufactured 
+
+VALUES (5,'AB Beauty Products',TO_DATE('03-05-2021','MM-DD-YYYY'),TO_DATE('07-22-2024','MM-DD-YYYY'),'For external use only Do not use on damaged or broken skin') 
+
+ 
+
+PURCHASED TABLE:
+
+ 
+
+CREATE TABLE Purchased 
+
+(PProductID INT NOT NULL, 
+
+VendorName VARCHAR2(50), 
+
+BrandName VARCHAR2(50), 
+
+VendorContactNo VARCHAR2(15), 
+
+VendorEmailId VARCHAR2(25), 
+
+TrackingID VARCHAR (20)); 
+
+ 
+
+ALTER TABLE Purchased 
+
+ADD CONSTRAINT Purchased_PK PRIMARY KEY(PProductID); 
+
+ALTER TABLE Purchased  
+
+ADD CONSTRAINT Purchased_FK4 FOREIGN KEY(PProductID) REFERENCES Beauty_Products (ProductID); 
+
+ 
+
+INSERT INTO Purchased  
+
+VALUES (2,'Ziya Beauty Stores','Dior','626-234-7546’, ‘ZiyaBeauty12@gmail.com','934234') 
+
+INSERT INTO Purchased  
+
+VALUES (4,'Sanya E-Beauty','Sanya','626-546-7546’, ‘sanya12@gmail.com','943523' ) 
+
+ 
+
+EMPLOYEE TABLE:
+
+ 
+
+CREATE TABLE Employee   
+
+(  
+
+    EmployeeID INT NOT NULL,   
+
+    EmployeeName VARCHAR2(25),   
+
+    Street VARCHAR2(50),   
+
+    City VARCHAR2(50),   
+
+    State VARCHAR2(2),   
+
+    PostalCode VARCHAR2(10),   
+
+    DateOfBirth DATE,   
+
+    Gender VARCHAR2(6),   
+
+    Salary NUMBER (9,2),   
+
+    CONSTRAINT EmployeePK PRIMARY KEY (EmployeeID),  
+
+    CONSTRAINT Gender CHECK (Gender IN ('Male','Female','M','F')),   
+
+    CONSTRAINT Salary CHECK (Salary > 0) 
+
+); 
+
+ 
+
+INSERT INTO Employee VALUES ('1','Jeniffer Smith','13 Any St, Apt A','LA','CA','91001','09-JAN-55','M','50000');  
+
+INSERT INTO Employee VALUES ('2','Johny Ward','12 Any St Apt B','LA','CA','91002','08-DEC-45','M','30000');  
+
+INSERT INTO Employee VALUES ('3','Gloria Jenkins','14 Any St Apt C','LA', 'CA','91003','19-JUL-58','F','45000');  
+
+INSERT INTO Employee VALUES ('4','Aaron Cox','15 Any St Apt D','LA','CA','91004','20-JUN-31','F','35000');  
+
+INSERT INTO Employee VALUES ('5','Teresa Butler','16 Any St Apt E','LA','CA','91005','15-SEP-52','M','56000'); 
